@@ -52,6 +52,21 @@ class App extends Component {
     })
   }
 
+  updateDay = (e) => {
+    const firebaseKey = (e.target.id).split('_')[0];
+    const indexOfDay = (e.target.id).split('_').pop().split(';')[0];
+    let dayValue = !e.target.checked;
+    // dayValue = !dayValue;
+    // console.log(!dayValue);
+    console.log(firebaseKey);
+    console.log(indexOfDay);
+    const habitRef = firebase.database().ref(`/${firebaseKey}/days/${indexOfDay}`);
+    habitRef.update({
+      complete: !dayValue
+    });
+
+  }
+
   render() {
     return (
       <div className="App">
@@ -68,11 +83,11 @@ class App extends Component {
               return (
                 <div key={habit[0]}>
                   <h2>{habit[1].habit}</h2>
-                  {habit[1].days.map((day) => {
+                  {habit[1].days.map((day,i) => {
                     return(
                       <div>
-                        <p>{day.day}</p>
-                        <input type="checkbox" checked={day.complete}/>
+                        <label htmlFor={habit[0] + '_' + i}>{day.day}</label>
+                        <input id={habit[0]+'_'+i} type="checkbox" checked={day.complete} onChange={this.updateDay}/>
                       </div>
                     )
                   })}
