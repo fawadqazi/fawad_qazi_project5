@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import firebase from './firebase';
+import Habit from './Habit';
 
 // reference to the root of the database
 const dbRef = firebase.database().ref();
@@ -56,8 +57,6 @@ class App extends Component {
     const firebaseKey = (e.target.id).split('_')[0];
     const indexOfDay = (e.target.id).split('_').pop().split(';')[0];
     let dayValue = !e.target.checked;
-    // dayValue = !dayValue;
-    // console.log(!dayValue);
     console.log(firebaseKey);
     console.log(indexOfDay);
     const habitRef = firebase.database().ref(`/${firebaseKey}/days/${indexOfDay}`);
@@ -77,24 +76,13 @@ class App extends Component {
           <input type="submit" value="Add Habit" />
         </form>
         <section>
-          {
-            Object.entries(this.state.habitList).map((habit) => {
-              console.log(habit);
-              return (
-                <div key={habit[0]}>
-                  <h2>{habit[1].habit}</h2>
-                  {habit[1].days.map((day,i) => {
-                    return(
-                      <div>
-                        <label htmlFor={habit[0] + '_' + i}>{day.day}</label>
-                        <input id={habit[0]+'_'+i} type="checkbox" checked={day.complete} onChange={this.updateDay}/>
-                      </div>
-                    )
-                  })}
-                </div>
-              )
-            })
-          }
+          { Object.entries(this.state.habitList).map((habit) => (
+              <Habit
+                key={habit[0]}
+                habit={habit}
+                updateDay={this.updateDay}
+              />
+            ))}
         </section>
       </div>
     );
