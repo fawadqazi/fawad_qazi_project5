@@ -1,6 +1,7 @@
 import React from 'react';
 
 const Habit = ({habit, updateDay }) => {
+   // console.log(habit);
    return(
       <div>
          <h2>{habit[1].habit}</h2>

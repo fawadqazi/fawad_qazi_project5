@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import firebase from './firebase';
+import firebase, { auth, provider } from './firebase';
 import Habit from './Habit';
 
 // reference to the root of the database
@@ -20,17 +20,26 @@ class App extends Component {
         { "complete": false, day: "S" },
         { "complete": false, day: "S" }
       ],
-      habitList: {}
+      habitList: {},
+      user: null
+
     }
   }
 
   componentDidMount() {
     // attach event listener to the firebase
-    dbRef.on('value', (snapshot) => {
-      this.setState({
-        habitList: snapshot.val()
-      })
-    })
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({ user });
+        const userDBRef = firebase.database().ref(`users/${this.state.user.uid}`)
+        userDBRef.on('value', (snapshot) => {
+          // console.log(snapshot.val());
+          this.setState({
+            habitList: snapshot.val()
+          })
+        })
+      }
+    });
   }
 
   handleChange = (e) => {
@@ -44,9 +53,11 @@ class App extends Component {
     // post our new habit to firebase
     const newHabit = {
       habit: this.state.habit,
-      days: this.state.days
+      days: this.state.days,
+      email: this.state.user.email
     }
-    dbRef.push(newHabit);
+    const userDBRef = firebase.database().ref(`users/${this.state.user.uid}`);
+    userDBRef.push(newHabit);
     // clear the form
     this.setState({
       habit: "",
@@ -57,24 +68,49 @@ class App extends Component {
     const firebaseKey = (e.target.id).split('_')[0];
     const indexOfDay = (e.target.id).split('_').pop().split(';')[0];
     let dayValue = !e.target.checked;
+    console.log(this.state.user.uid);
     console.log(firebaseKey);
-    console.log(indexOfDay);
-    const habitRef = firebase.database().ref(`/${firebaseKey}/days/${indexOfDay}`);
-    habitRef.update({
-      complete: !dayValue
-    });
+    // const habitRef = firebase.database().ref(`users/${this.state.user.uid}/${firebaseKey}/days/${indexOfDay}`);
+    // habitRef.update({
+    //   complete: !dayValue
+    // });
 
+  }
+
+  login = () => {
+    auth.signInWithPopup(provider)
+      .then((result) => {
+        const user = result.user;
+        this.setState({
+          user
+        });
+      });
+  }
+
+  logout = () => {
+    auth.signOut()
+      .then(() => {
+        this.setState({
+          user: null
+        });
+      });
   }
 
   render() {
     return (
       <div className="App">
         <h1>Habit Tracker</h1>
+        {this.state.user ?
+          <button onClick={this.logout}>Log Out</button>
+          :
+          <button onClick={this.login}>Log In</button>
+        }
         <form action="" onSubmit={this.handleSubmit}>
           <label htmlFor="habit">Habit:</label>
           <input type="text" id="habit" value={this.state.habit} onChange={this.handleChange} />
           <input type="submit" value="Add Habit" />
         </form>
+        {this.state.user ?
         <section>
           { Object.entries(this.state.habitList).map((habit) => (
               <Habit
@@ -84,6 +120,9 @@ class App extends Component {
               />
             ))}
         </section>
+        :
+        <div>User must be logged in.</div>  
+      }
       </div>
     );
   }
