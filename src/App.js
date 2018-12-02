@@ -92,15 +92,10 @@ class App extends Component {
     const firebaseKey = (e.target.id).split('__')[0];
     const indexOfDay = (e.target.id).split('__').pop().split(';')[0];
     let dayValue = !e.target.checked;
-    // console.log(this.state.user.uid);
-    // console.log(firebaseKey);
-    // console.log(indexOfDay);
-    // console.log(e.target.id);
     const habitRef = firebase.database().ref(`users/${this.state.user.uid}/${firebaseKey}/days/${indexOfDay}`);
     habitRef.update({
       complete: !dayValue
     });
-
   }
 
   login = () => {
@@ -129,7 +124,7 @@ class App extends Component {
     habitRef.remove();
   }
 
-  checkDate = () =>{
+  checkDate = () => {
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() + 1; //January is 0!
@@ -147,7 +142,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="wrapper">
         <h1>Habit Tracker</h1>
         {this.state.user ?
           <button onClick={this.logout}>Log Out</button>
@@ -157,14 +152,14 @@ class App extends Component {
         {this.state.user ?
           <form action="" onSubmit={this.handleSubmit}>
             <label htmlFor="habit">Habit:</label>
-            <input type="text" id="habit" value={this.state.habit} onChange={this.handleChange} required/>
-            <input id="startDate" type="date" onChange={this.handleDate} min="1899-01-01" required/>
+            <input type="text" placeholder="mm/dd/yyy" id="habit" value={this.state.habit} onChange={this.handleChange} required />
+            <input id="startDate" type="date" onChange={this.handleDate} min="1899-01-01" required />
             <input type="submit" value="Add Habit" />
           </form>
           : null
         }
         {this.state.user ?
-          <section>
+          <ul>
             {this.state.habitList ?
               Object.entries(this.state.habitList).map((habit) => (
                 <Habit
@@ -174,8 +169,8 @@ class App extends Component {
                   deleteHabit={this.deleteHabit}
                 />
               ))
-            : null}
-          </section>
+              : null}
+          </ul>
           :
           <div>User must be logged in.</div>
         }
