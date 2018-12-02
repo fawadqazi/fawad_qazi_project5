@@ -11,22 +11,10 @@ class App extends Component {
     super();
     this.state = {
       habit: "",
-      // days: [
-      //   { "complete": false, day: "M" },
-      //   { "complete": false, day: "T" },
-      //   { "complete": false, day: "W" },
-      //   { "complete": false, day: "T" },
-      //   { "complete": false, day: "F" },
-      //   { "complete": false, day: "S" },
-      //   { "complete": false, day: "S" }
-      // ]
       days: [],
       habitList: {},
       user: null,
-      nameOfDays : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-      daysName: [],
-      daysbb : [],
-      combo : []
+      habitArray: []
     }
   }
 
@@ -37,7 +25,7 @@ class App extends Component {
         this.setState({ user });
         const userDBRef = firebase.database().ref(`users/${this.state.user.uid}`)
         userDBRef.on('value', (snapshot) => {
-          console.log(snapshot.val());
+          // console.log(snapshot.val());
           this.setState({
             habitList: snapshot.val()
           })
@@ -53,24 +41,34 @@ class App extends Component {
   }
 
   handleDate = (e) => {
+    this.checkDate();
+    const nameOfDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    let habitDays = [];
+    let habitDateDigits = [];
+    let habitDates = [];
+
     let date = new Date(e.target.value + 'T12:00:00.000Z');
-    this.state.daysName.push(this.state.nameOfDays[date.getDay()]);
-    this.state.daysbb.push(date.getDate());
+    habitDays.push(nameOfDays[date.getDay()]);
+    habitDateDigits.push(date.getDate());
+    habitDates.push(new Date(date));
+
     for (let i = 1; i <= 6; i++) {
       date.setDate(date.getDate() + 1);
-      this.state.daysName.push(this.state.nameOfDays[date.getDay()]);
-      this.state.daysbb.push(date.getDate());
+      habitDates.push(new Date(date));
+      habitDays.push(nameOfDays[date.getDay()]);
+      habitDateDigits.push(date.getDate());
     }
-    console.log(this.state.daysName);
-    for (let i = 0; i < this.state.daysbb.length; i++) {
-      this.state.combo.push({
-        [this.state.daysName[i]]: this.state.daysbb[i],
-        complete: false
+
+    for (let i = 0; i < habitDateDigits.length; i++) {
+      this.state.habitArray.push({
+        [habitDays[i]]: habitDateDigits[i],
+        complete: false,
+        date: habitDates[i].toLocaleDateString()
       })
     }
-    console.log(this.state.combo);
+    // console.log(this.state.habitArray);
     this.setState({
-      days: this.state.combo
+      days: this.state.habitArray
     })
   }
 
@@ -131,6 +129,22 @@ class App extends Component {
     habitRef.remove();
   }
 
+  checkDate = () =>{
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+    if (dd < 10) {
+      dd = '0' + dd
+    }
+    if (mm < 10) {
+      mm = '0' + mm
+    }
+
+    today = yyyy + '-' + mm + '-' + dd;
+    document.getElementById('startDate').setAttribute('min', today);
+  }
+
   render() {
     return (
       <div className="App">
@@ -141,24 +155,26 @@ class App extends Component {
           <button onClick={this.login}>Log In</button>
         }
         {this.state.user ?
-        <form action="" onSubmit={this.handleSubmit}>
-          <label htmlFor="habit">Habit:</label>
-          <input type="text" id="habit" value={this.state.habit} onChange={this.handleChange} />
-          <input id="startDate" type="date" onChange={this.handleDate}/>
-          <input type="submit" value="Add Habit" />
-        </form>
-        : null
+          <form action="" onSubmit={this.handleSubmit}>
+            <label htmlFor="habit">Habit:</label>
+            <input type="text" id="habit" value={this.state.habit} onChange={this.handleChange} required/>
+            <input id="startDate" type="date" onChange={this.handleDate} min="1899-01-01" required/>
+            <input type="submit" value="Add Habit" />
+          </form>
+          : null
         }
         {this.state.user ?
           <section>
-            {Object.entries(this.state.habitList).map((habit) => (
-              <Habit
-                key={habit[0]}
-                habit={habit}
-                updateDay={this.updateDay}
-                deleteHabit={this.deleteHabit}
-              />
-            ))}
+            {this.state.habitList ?
+              Object.entries(this.state.habitList).map((habit) => (
+                <Habit
+                  key={habit[0]}
+                  habit={habit}
+                  updateDay={this.updateDay}
+                  deleteHabit={this.deleteHabit}
+                />
+              ))
+            : null}
           </section>
           :
           <div>User must be logged in.</div>
