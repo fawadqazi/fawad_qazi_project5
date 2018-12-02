@@ -11,18 +11,22 @@ class App extends Component {
     super();
     this.state = {
       habit: "",
-      days: [
-        { "complete": false, day: "M" },
-        { "complete": false, day: "T" },
-        { "complete": false, day: "W" },
-        { "complete": false, day: "T" },
-        { "complete": false, day: "F" },
-        { "complete": false, day: "S" },
-        { "complete": false, day: "S" }
-      ],
+      // days: [
+      //   { "complete": false, day: "M" },
+      //   { "complete": false, day: "T" },
+      //   { "complete": false, day: "W" },
+      //   { "complete": false, day: "T" },
+      //   { "complete": false, day: "F" },
+      //   { "complete": false, day: "S" },
+      //   { "complete": false, day: "S" }
+      // ]
+      days: [],
       habitList: {},
-      user: null
-
+      user: null,
+      nameOfDays : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      daysName: [],
+      daysbb : [],
+      combo : []
     }
   }
 
@@ -33,7 +37,7 @@ class App extends Component {
         this.setState({ user });
         const userDBRef = firebase.database().ref(`users/${this.state.user.uid}`)
         userDBRef.on('value', (snapshot) => {
-          // console.log(snapshot.val());
+          console.log(snapshot.val());
           this.setState({
             habitList: snapshot.val()
           })
@@ -45,6 +49,28 @@ class App extends Component {
   handleChange = (e) => {
     this.setState({
       [e.target.id]: e.target.value
+    })
+  }
+
+  handleDate = (e) => {
+    let date = new Date(e.target.value + 'T12:00:00.000Z');
+    this.state.daysName.push(this.state.nameOfDays[date.getDay()]);
+    this.state.daysbb.push(date.getDate());
+    for (let i = 1; i <= 6; i++) {
+      date.setDate(date.getDate() + 1);
+      this.state.daysName.push(this.state.nameOfDays[date.getDay()]);
+      this.state.daysbb.push(date.getDate());
+    }
+    console.log(this.state.daysName);
+    for (let i = 0; i < this.state.daysbb.length; i++) {
+      this.state.combo.push({
+        [this.state.daysName[i]]: this.state.daysbb[i],
+        complete: false
+      })
+    }
+    console.log(this.state.combo);
+    this.setState({
+      days: this.state.combo
     })
   }
 
@@ -118,6 +144,7 @@ class App extends Component {
         <form action="" onSubmit={this.handleSubmit}>
           <label htmlFor="habit">Habit:</label>
           <input type="text" id="habit" value={this.state.habit} onChange={this.handleChange} />
+          <input id="startDate" type="date" onChange={this.handleDate}/>
           <input type="submit" value="Add Habit" />
         </form>
         : null

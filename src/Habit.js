@@ -6,9 +6,10 @@ const Habit = ({ habit, updateDay, deleteHabit }) => {
       <div>
          <h2>{habit[1].habit}</h2>
          {habit[1].days.map((day, i) => {
+            console.log(day)
             return (
                <div key={habit[0] + '_habit' + i}>
-                  <label htmlFor={habit[0] + '__' + i}>{day.day}</label>
+                  <label htmlFor={habit[0] + '__' + i}>{Object.keys(day)[0]} {day[Object.keys(day)[0]]}</label>
                   <input id={habit[0] + '__' + i} type="checkbox" checked={day.complete} onChange={updateDay} />                
                </div>
             )
