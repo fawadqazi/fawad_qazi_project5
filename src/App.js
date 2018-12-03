@@ -142,38 +142,46 @@ class App extends Component {
 
   render() {
     return (
-      <div className="wrapper">
-        <h1>Habit Tracker</h1>
-        {this.state.user ?
-          <button onClick={this.logout}>Log Out</button>
-          :
-          <button onClick={this.login}>Log In</button>
-        }
-        {this.state.user ?
-          <form action="" onSubmit={this.handleSubmit}>
-            <label htmlFor="habit">Habit:</label>
-            <input type="text" placeholder="mm/dd/yyy" id="habit" value={this.state.habit} onChange={this.handleChange} required />
-            <input id="startDate" type="date" onChange={this.handleDate} min="1899-01-01" required />
-            <input type="submit" value="Add Habit" />
-          </form>
-          : null
-        }
-        {this.state.user ?
-          <ul>
-            {this.state.habitList ?
-              Object.entries(this.state.habitList).map((habit) => (
-                <Habit
-                  key={habit[0]}
-                  habit={habit}
-                  updateDay={this.updateDay}
-                  deleteHabit={this.deleteHabit}
-                />
-              ))
-              : null}
-          </ul>
-          :
-          <div>User must be logged in.</div>
-        }
+      <div className="App">
+          {this.state.user ?
+          <div className="user-page">
+            <div className="header">
+              <h2 className="page-header">Habit Tracker</h2>
+              <button className="btn-user button" onClick={this.logout}>Log Out</button>
+            </div>
+            <div className="wrapper">
+              <form action="" onSubmit={this.handleSubmit}>
+                <label htmlFor="habit">Habit:</label>
+                <input type="text" placeholder="Habit" id="habit" value={this.state.habit} onChange={this.handleChange} required />
+                <input id="startDate" placeholder="mm/dd/yyyy" type="date" onChange={this.handleDate} min="1899-01-01" required />
+                <input type="submit" value="Add Habit" />
+              </form>
+              <ul className="habit-list">
+                {this.state.habitList ?
+                  Object.entries(this.state.habitList).map((habit) => (
+                    <Habit
+                      key={habit[0]}
+                      habit={habit}
+                      updateDay={this.updateDay}
+                      deleteHabit={this.deleteHabit}
+                      updateContent={this.updateContent}
+                    />
+                  ))
+                  : null}
+              </ul>
+            </div>
+          </div>
+            :
+            <div className="guest-header">
+              <div className="wrapper">
+                <div className="landing">
+                  <h1 className="app-header">Habit Tracker</h1>
+                  <button className="button" onClick={this.login}>Log In</button>
+                </div>
+              </div>
+            </div>
+          }
+            
       </div>
     );
   }

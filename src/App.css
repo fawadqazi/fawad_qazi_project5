@@ -1,7 +1,73 @@
+.guest-header, .user-page{
+  min-height: 100vh;
+}
+
+.guest-header{
+  background: url('assets/hero.jpg') center center;
+  background-size: cover;
+}
+
+.user-page{
+  background: url('assets/user-hero.jpg') center center;
+  background-size: cover;
+}
+
 .wrapper{
   max-width: 768px;
   width: 80%;
   margin: 0 auto;
+}
+
+.app-header, .page-header{
+  font-family: 'Pacifico', cursive;
+  color: #ffffff;
+}
+
+.app-header{
+  font-size: 8rem;
+}
+
+.page-header{
+  font-size: 5rem;
+}
+
+.button{
+   padding: 1.3rem 4rem;
+   border-radius: 5px;
+   cursor: pointer;
+   display: inline-block;
+   text-align: center;
+   font-weight: bold;
+   text-transform: uppercase;
+   background: #ffffff;
+   width: 30%;
+}
+
+.btn-user{
+  width: auto;
+  border: none;
+  font-size: 1.8rem;
+}
+
+.button:hover{
+   border: #000000;
+   background: #000000;
+   color: #ffffff;
+}
+
+.landing{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20rem;
+  height: 100vh;
+}
+
+.header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 1rem;
 }
 
 /* Checkbox Styling */
@@ -45,7 +111,7 @@
 
 /* When the checkbox is checked, add a blue background */
 .container input:checked ~ .checkmark {
-    background-color: #2196F3;
+    background-color: #000000;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
@@ -80,11 +146,18 @@
    border: 0;
    padding: 1.5rem 2rem;
    color: #f1f1f1;
-   background: #4c4b4b;
+   background: #000000;
+   font-weight: bold;
 }
 
 .side-bar-plus{
    float: right;
+}
+
+.habit{
+  background: #ffffff;
+  border-radius: 5px;
+  margin-bottom: 2rem;
 }
 
 .habit-content{
@@ -98,4 +171,31 @@
 .habit-days{
   display: flex;
   justify-content: space-between;
+  padding: 0.5rem 1.5rem;
+}
+
+.habit-list{
+  margin-top: 4rem;  
+}
+
+.day-name, .day-no{
+  font-weight: bold;
+}
+
+.fas{
+  margin-left: 1rem;
+}
+
+.hide{
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+
+.show{
+  opacity: 1;
+  position: static;
+  height: auto;
+  width: auto;
 }
