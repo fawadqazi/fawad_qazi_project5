@@ -220,6 +220,13 @@
   margin: 1rem 0;
 }
 
+input[type="date"]{
+  display:block;
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+  min-height: 2.5em;
+}
+
 .input-text::-webkit-input-placeholder{ /* Chrome/Opera/Safari */
    color: #ffffff;
 }
@@ -246,12 +253,6 @@
     font-size: 10rem;
   }
 }
-
-/* @media (max-width: 940px) {
-}
-
-@media (max-width: 768px) {
-} */
 
 @media (max-width: 650px) {
   .app-header{
