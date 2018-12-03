@@ -259,6 +259,20 @@ input[type="date"]{
   max-height: 100vh;
 }
 
+.guest-link{
+  color: #ffffff;
+  font-weight: bold;
+  margin: 2rem;
+  font-size: 2.5rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.guest-link:hover{
+  font-size: 3rem;
+  text-shadow: 1px 1px 2px #000000;
+}
+
 /* Responsive Styles */
 @media (min-width: 1600px) {
   .app-header{

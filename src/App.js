@@ -110,6 +110,17 @@ class App extends Component {
       });
   }
 
+  // when login button is clicked, google auth window pops up
+  guest = () => {
+    firebase.auth().signInAnonymously()
+      .then((result) => {
+        const user = result.user;
+        this.setState({
+          user
+        });
+      });
+  }
+
   // when logout is clicked, session is ended by clearing the user 
   logout = () => {
     auth.signOut()
@@ -186,6 +197,7 @@ class App extends Component {
                 <div className="landing">
                   <h1 className="app-header">Habit Tracker</h1>
                   <button className="button" onClick={this.login}>Log In</button>
+                  <a className="guest-link" onClick={this.guest}>Use as a Guest</a>
                 </div>
               </div>
             </div>
