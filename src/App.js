@@ -16,7 +16,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // attach event listener to the firebase
+    // attach event listener to the firebase so session is maintained even after refresh
     auth.onAuthStateChanged((user) => {
       if (user) {
         this.setState({ user });
@@ -37,6 +37,7 @@ class App extends Component {
     })
   }
 
+  // when the start date is selected, it generates arrays for name of days and date and then creates an object to push on firebase
   handleDate = (e) => {
     this.checkDate();
     const nameOfDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -68,6 +69,7 @@ class App extends Component {
     })
   }
 
+  // when the form is submitted the newHabit object is pushed to the firebase
   handleSubmit = (e) => {
     e.preventDefault();
     // post our new habit to firebase
@@ -86,6 +88,7 @@ class App extends Component {
     document.getElementById('startDate').value = '';
   }
 
+  // when a checkbox is checked or unchecked, it is updated on firebase
   updateDay = (e) => {
     const firebaseKey = (e.target.id).split('__')[0];
     const indexOfDay = (e.target.id).split('__').pop().split(';')[0];
@@ -96,6 +99,7 @@ class App extends Component {
     });
   }
 
+  // when login button is clicked, google auth window pops up
   login = () => {
     auth.signInWithPopup(provider)
       .then((result) => {
@@ -106,6 +110,7 @@ class App extends Component {
       });
   }
 
+  // when logout is clicked, session is ended by clearing the user 
   logout = () => {
     auth.signOut()
       .then(() => {
@@ -115,6 +120,7 @@ class App extends Component {
       });
   }
 
+  // if a habit is deleted
   deleteHabit = (e) => {
     e.preventDefault();
     const firebaseKey = e.target.id;
@@ -122,6 +128,7 @@ class App extends Component {
     habitRef.remove();
   }
 
+  // a check to make sure that the minimum date to start a habit should be today and in the future and no previous date can be selected
   checkDate = () => {
     var today = new Date();
     var dd = today.getDate();
@@ -142,6 +149,7 @@ class App extends Component {
     return (
       <div className="App">
           {this.state.user ?
+          // if user is not null after successfull login show the form to add habit and habits already added
           <div className="user-page">
             <div className="header">
               <h2 className="page-header">Habit Tracker</h2>
@@ -172,6 +180,7 @@ class App extends Component {
             </div>
           </div>
             :
+            // if the user is not logged in show guest landing page
             <div className="guest-header">
               <div className="wrapper">
                 <div className="landing">
