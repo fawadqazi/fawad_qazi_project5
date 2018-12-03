@@ -197,7 +197,7 @@ class App extends Component {
                 <div className="landing">
                   <h1 className="app-header">Habit Tracker</h1>
                   <button className="button" onClick={this.login}>Log In</button>
-                  <a className="guest-link" onClick={this.guest}>Use as a Guest</a>
+                  <a className="guest-link" onClick={this.guest}>Try as Guest</a>
                 </div>
               </div>
             </div>
