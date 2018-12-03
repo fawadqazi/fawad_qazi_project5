@@ -3,9 +3,6 @@ import './App.css';
 import firebase, { auth, provider } from './firebase';
 import Habit from './Habit';
 
-// reference to the root of the database
-const dbRef = firebase.database().ref();
-
 class App extends Component {
   constructor() {
     super();
@@ -66,9 +63,8 @@ class App extends Component {
         date: habitDates[i].toLocaleDateString()
       })
     }
-    // console.log(this.state.habitArray);
     this.setState({
-      days: this.state.habitArray
+      days: this.state.habitArray,
     })
   }
 
@@ -85,7 +81,9 @@ class App extends Component {
     // clear the form
     this.setState({
       habit: "",
+      habitArray: []
     })
+    document.getElementById('startDate').value = '';
   }
 
   updateDay = (e) => {
@@ -147,14 +145,16 @@ class App extends Component {
           <div className="user-page">
             <div className="header">
               <h2 className="page-header">Habit Tracker</h2>
-              <button className="btn-user button" onClick={this.logout}>Log Out</button>
+              <button className="btn-user button desk-logout" onClick={this.logout}>Log Out</button>
+              <i className="fas fa-sign-out-alt mobile-logout" onClick={this.logout}></i><span className="visually-hidden">Click to log out</span>
             </div>
             <div className="wrapper">
               <form action="" onSubmit={this.handleSubmit}>
-                <label htmlFor="habit">Habit:</label>
-                <input type="text" placeholder="Habit" id="habit" value={this.state.habit} onChange={this.handleChange} required />
-                <input id="startDate" placeholder="mm/dd/yyyy" type="date" onChange={this.handleDate} min="1899-01-01" required />
-                <input type="submit" value="Add Habit" />
+                <label htmlFor="habit" className="label-text">Habit:</label>
+                <input type="text" className="input-text" placeholder="Habit" id="habit" value={this.state.habit} onChange={this.handleChange} maxLength="15" autoComplete="off" required/>
+                <label htmlFor="startDate" className="label-text">Start Date:</label>
+                <input id="startDate" className="input-text" placeholder="mm/dd/yyyy" type="date" onChange={this.handleDate} min="1899-01-01" autoComplete="off" required />
+                <input className="button btn-user" type="submit" value="Track" />
               </form>
               <ul className="habit-list">
                 {this.state.habitList ?
@@ -180,8 +180,7 @@ class App extends Component {
                 </div>
               </div>
             </div>
-          }
-            
+          }       
       </div>
     );
   }
